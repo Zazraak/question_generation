@@ -133,13 +133,19 @@ class QGPipeline:
         inputs = []
         for i, answer in enumerate(answers):
             if len(answer) == 0: continue
-            sent = sents[i]
+            
             for answer_text in answer:
                 sents_copy = sents[:]
-                
+                sent = sents[i]
+
                 answer_text = answer_text.strip()
                 
+                # added to remove occational <pad> tag that shows up on answer_texts
+                if answer_text.startswith("<pad> "):
+                    answer_text = answer_text[6:] 
+                
                 ans_start_idx = sent.index(answer_text)
+
                 
                 sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
                 sents_copy[i] = sent
